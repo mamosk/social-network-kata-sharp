@@ -12,7 +12,17 @@ namespace SocialNetwork
 
         private static Lazy<IKata> lazykata = new Lazy<IKata>(() => new Kata.Kata());
 
+
+        private static Lazy<IList<(short? Base, string Word)>> timeUnits = new Lazy<IList<(short?, string)>>(() => new List<(short?, string)>() {
+            (60, "second"),
+            (60, "minute"),
+            (24, "hour"),
+            (null, "day")
+        });
+
         private static IKata Kata { get => lazykata.Value; }
+
+        private static IList<(short? Base, string Word)> TimeUnits { get => timeUnits.Value; }
 
         #region methods
 
@@ -133,7 +143,26 @@ namespace SocialNetwork
 
         private static void WriteLines(IList<(string User, string Text, long Ticks)> posts) => posts?.OrderByDescending(post => post.Ticks).ToList().ForEach(post => WriteLine(post.User, post.Text, post.Ticks));
 
-        private static void WriteLine(string user, string text, long ticks) => Console.WriteLine($"{user} - {text} ({ticks})");
+        private static void WriteLine(string user, string text, long ticks) => Console.WriteLine($"{user} - {text} ({ago(ticks)})");
+
+        private static string ago(long ticks)
+        {
+            long seconds = (long)Math.Round((DateTime.UtcNow.Ticks - ticks) * 1.0 / TimeSpan.TicksPerSecond, 0);
+            string word = null;
+            foreach (var timeUnit in TimeUnits)
+            {
+                word = timeUnit.Word;
+                if (timeUnit.Base.HasValue && seconds > timeUnit.Base.Value)
+                {
+                    seconds = (long)Math.Round((seconds) * 1.0 / timeUnit.Base.Value, 0);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return $"{seconds} {word ?? "second"}{(seconds > 1 ? "s" : "")} ago";
+        }
 
         #endregion render
 
