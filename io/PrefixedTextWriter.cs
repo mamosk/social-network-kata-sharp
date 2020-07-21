@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace social_network_kata_sharp.io
+namespace SocialNetwork.IO
 {
     class PrefixedTextWriter : TextWriter
     {

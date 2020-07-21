@@ -1,18 +1,18 @@
 using System.Collections.Generic;
 
-namespace social_network_kata_sharp.kata
+namespace SocialNetwork.Kata
 {
 
     interface IKata
     {
 
-        public void Post(string user);
+        public void Post(string user, string post);
 
-        public List<string> Read(string user);
+        public IList<(string, string, long)> Read(string user);
 
         public void Follow(string user, string another);
 
-        public List<string> Wall(string user);
+        public IList<(string, string, long)> Wall(string user);
 
     }
 

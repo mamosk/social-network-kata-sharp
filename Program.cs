@@ -1,17 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
-using social_network_kata_sharp.io;
+using SocialNetwork.IO;
+using SocialNetwork.Kata;
+using System.Linq;
 
-namespace social_network_kata_sharp
+namespace SocialNetwork
 {
     class Program
     {
 
+        private static Lazy<IKata> lazykata = new Lazy<IKata>(() => new Kata.Kata());
+
+        private static IKata Kata { get => lazykata.Value; }
+
         #region methods
 
         #region main methods
-        async static Task<int> Main(string[] args)
+        static int Main(string[] args)
         {
             switch (args.Length)
             {
@@ -25,29 +31,34 @@ namespace social_network_kata_sharp
                             // TODO demo
                             break;
                         default:
-                            await Console.Error.WriteLineAsync($"Unrecognized argument: {args[0]}");
+                            Console.Error.WriteLine($"Unrecognized argument: {args[0]}");
                             return 1;
                     }
                     return 0;
                 default:
-                    await Console.Error.WriteLineAsync($"Unrecognized arguments: {string.Join(" ", args)}");
+                    Console.Error.WriteLine($"Unrecognized arguments: {string.Join(" ", args)}");
                     return 1;
             }
         }
 
+        // Loop reading user commands, checking with switch-case statements:
+        // break = incorrect command: display help for user;
+        // continue = correct command: command executed, read input again;
+        // return = exit command: stop kata execution.
         private static void kata()
         {
             Console.SetOut(new PrefixedTextWriter());
             string[] cmd;
-            string user;
             while (true)
             {
                 Console.Write("");
                 cmd = Console.ReadLine().Split(" ");
                 switch (cmd.Length)
                 {
+
                     // No command
                     case 0: continue;
+
                     // Single word command
                     case 1:
                         switch (cmd[0])
@@ -62,42 +73,69 @@ namespace social_network_kata_sharp
 
                             // Read
                             default:
-                                // TODO read user timeline
-                                user = cmd[0];
+                                WriteLines(Kata.Read(cmd[0]));
                                 continue;
                         }
                         break;
 
                     // Multiple word command
                     default:
-                        user = cmd[0];
+
+                        // Switch second word of command
                         switch (cmd[1])
                         {
+
                             // Post
                             case "->":
-                                // TODO post to user timeline
-                                continue;
+                                if (cmd.Length == 3)
+                                {
+                                    Kata.Post(cmd[0], cmd[2]);
+                                    continue;
+                                }
+                                break;
 
                             // Follow
                             case "follows":
-                                // TODO user follows another user
-                                continue;
+                                if (cmd.Length == 3)
+                                {
+                                    Kata.Follow(cmd[0], cmd[2]);
+                                    continue;
+                                }
+                                break;
 
                             // Wall
                             case "wall":
-                                // TODO read user and zir followees timelines
-                                continue;
+                                if (cmd.Length == 2)
+                                {
+                                    WriteLines(Kata.Wall(cmd[0]));
+                                    continue;
+                                }
+                                break;
 
                             default:
                                 break;
+
                         }
                         break;
+
                 }
+
+                // Help
                 help();
+
             }
+
         }
 
         #endregion main
+
+        #region render
+
+        private static void WriteLines(IList<(string User, string Text, long Ticks)> posts) => posts?.OrderByDescending(post => post.Ticks).ToList().ForEach(post => WriteLine(post.User, post.Text, post.Ticks));
+
+        private static void WriteLine(string user, string text, long ticks) => Console.WriteLine($"{user} - {text} ({ticks})");
+
+        #endregion render
 
         #region help methods
 
