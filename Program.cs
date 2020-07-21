@@ -7,6 +7,10 @@ namespace social_network_kata_sharp
 {
     class Program
     {
+
+        #region methods
+
+        #region main methods
         async static Task<int> Main(string[] args)
         {
             switch (args.Length)
@@ -93,6 +97,10 @@ namespace social_network_kata_sharp
             }
         }
 
+        #endregion main
+
+        #region help methods
+
         private const string HELP = @"
 kata commands:
   <user name> -> <message>           -> post message to user timeline
@@ -117,6 +125,10 @@ kata readme: https://github.com/xpeppers/social_networking_kata
                 }
             }
         }
+
+        #endregion help
+
+        #endregion methods
 
     }
 
