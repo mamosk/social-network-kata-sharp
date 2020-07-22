@@ -8,11 +8,11 @@ namespace SocialNetwork.Kata
 
         public void Post(string user, string post);
 
-        public IList<(string, string, long)> Read(string user);
+        public IList<(string, string, uint)> Read(string user);
 
         public void Follow(string user, string another);
 
-        public IList<(string, string, long)> Wall(string user);
+        public IList<(string, string, uint)> Wall(string user);
 
     }
 

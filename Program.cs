@@ -141,20 +141,20 @@ namespace SocialNetwork
 
         #region render
 
-        private static void WriteLines(IList<(string User, string Text, long Ticks)> posts) => posts?.OrderByDescending(post => post.Ticks).ToList().ForEach(post => WriteLine(post.User, post.Text, post.Ticks));
+        private static void WriteLines(IList<(string User, string Text, uint Instant)> posts) => posts?.OrderByDescending(post => post.Instant).ToList().ForEach(post => WriteLine(post.User, post.Text, post.Instant));
 
-        private static void WriteLine(string user, string text, long ticks) => Console.WriteLine($"{user} - {text} ({ago(ticks)})");
+        private static void WriteLine(string user, string text, uint instant) => Console.WriteLine($"{user} - {text} ({ago(instant)})");
 
-        private static string ago(long ticks)
+        private static string ago(uint instant)
         {
-            long seconds = (long)Math.Round((DateTime.UtcNow.Ticks - ticks) * 1.0 / TimeSpan.TicksPerSecond, 0);
+            uint seconds = (uint)Math.Round((DateTime.UtcNow.Ticks) * 1.0 / TimeSpan.TicksPerSecond, 0) - instant;
             string word = null;
             foreach (var timeUnit in TimeUnits)
             {
                 word = timeUnit.Word;
                 if (timeUnit.Base.HasValue && seconds > timeUnit.Base.Value)
                 {
-                    seconds = (long)Math.Round((seconds) * 1.0 / timeUnit.Base.Value, 0);
+                    seconds = (uint)Math.Round((seconds) * 1.0 / timeUnit.Base.Value, 0);
                 }
                 else
                 {

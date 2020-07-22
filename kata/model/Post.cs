@@ -8,7 +8,7 @@ namespace SocialNetwork.Kata.Model
 
         #region properties
         public string Text { get; private set; }
-        public DateTime Instant { get; private set; } // second
+        public uint Instant { get; private set; } // second
 
         #endregion properties
 
@@ -17,7 +17,7 @@ namespace SocialNetwork.Kata.Model
         public Post(string text)
         {
             Text = text;
-            Instant = DateTime.UtcNow;
+            Instant = (uint)Math.Round(DateTime.UtcNow.Ticks * 1.0 / TimeSpan.TicksPerSecond, 0);
         }
 
         #endregion constructors
