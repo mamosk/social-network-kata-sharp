@@ -14,11 +14,11 @@ To run this kata:
 
 1. make sure you have [.NET Core](https://dotnet.microsoft.com/download/dotnet-core) 3.1 or higher
 1. clone the repo — follow [this guide](https://docs.github.com/en/github/creating-cloning-and-archiving-repositories/cloning-a-repository)
-1. run following command:
+1. run following command
    ```
    dotnet run --project /path/to/the/repo
    ```
-When the [CLI](#cli) is ready you can type `help` to display available commands.
+When the CLI is ready you can type `help` to display available commands.
 **Enjoy!**
 
 ---
