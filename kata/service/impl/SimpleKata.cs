@@ -3,15 +3,13 @@ using SocialNetwork.Kata.Repo;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SocialNetwork.Kata
+namespace SocialNetwork.Kata.Simple
 {
 
-    class Kata : IKata
+    class SimpleKata : IKata
     {
 
-        private IRepo Repo { get; set; }
-
-        public Kata() => Repo = new Repo.Repo();
+        private IRepo Repo => RepoFactory.Repo;
 
         public void Post(string name, string text) => Repo.GetOrAdd(name).Timeline.Add(new Post(text));
 

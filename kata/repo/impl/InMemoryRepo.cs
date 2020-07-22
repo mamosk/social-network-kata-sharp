@@ -1,16 +1,15 @@
-using System;
 using SocialNetwork.Kata.Model;
 using System.Collections.Generic;
 
-namespace SocialNetwork.Kata.Repo
+namespace SocialNetwork.Kata.Repo.InMemory
 {
 
-    class Repo : IRepo
+    class InMemoryRepo : IRepo
     {
 
         private IDictionary<string, User> Users { get; set; }
 
-        public Repo() => Users = new Dictionary<string, User>();
+        public InMemoryRepo() => Users = new Dictionary<string, User>();
 
         public User GetOrAdd(string name)
         {
@@ -26,14 +25,7 @@ namespace SocialNetwork.Kata.Repo
         public User GetOrNull(string name)
         {
             User user;
-            if (Users.TryGetValue(name, out user))
-            {
-                return user;
-            }
-            else
-            {
-                return null;
-            }
+            return (Users.TryGetValue(name, out user)) ? user : null;
         }
 
     }

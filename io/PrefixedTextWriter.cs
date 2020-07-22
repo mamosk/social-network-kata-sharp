@@ -7,35 +7,17 @@ namespace SocialNetwork.IO
     class PrefixedTextWriter : TextWriter
     {
 
-        #region fields
+        protected const string PREFIX = "> ";
 
-        private TextWriter originalOut;
+        protected TextWriter OriginalOut { get; set; }
 
-        #endregion fields
-
-        #region properties
-
-        protected TextWriter OriginalOut { get => originalOut; set => originalOut = value; }
-
-        public override Encoding Encoding { get { return new System.Text.ASCIIEncoding(); } }
-
-        #endregion properties
-
-        #region constructors
+        public override Encoding Encoding => new ASCIIEncoding();
 
         public PrefixedTextWriter() => OriginalOut = Console.Out;
-
-        #endregion constructors
-
-        #region methods
-
-        protected const string PREFIX = "> ";
 
         public override void WriteLine(string message) => OriginalOut.WriteLine($"{PREFIX}{message}");
 
         public override void Write(string message) => OriginalOut.Write($"{PREFIX}{message}");
-
-        #endregion methods
 
     }
 }

@@ -10,8 +10,7 @@ namespace SocialNetwork
     class Program
     {
 
-        private static Lazy<IKata> lazykata = new Lazy<IKata>(() => new Kata.Kata());
-
+        #region fields
 
         private static Lazy<IList<(short? Base, string Word)>> timeUnits = new Lazy<IList<(short?, string)>>(() => new List<(short?, string)>() {
             (60, "second"),
@@ -20,9 +19,15 @@ namespace SocialNetwork
             (null, "day")
         });
 
-        private static IKata Kata { get => lazykata.Value; }
+        #endregion fields
 
-        private static IList<(short? Base, string Word)> TimeUnits { get => timeUnits.Value; }
+        #region properties
+
+        private static IKata Kata => KataFactory.Kata;
+
+        private static IList<(short? Base, string Word)> TimeUnits => timeUnits.Value;
+
+        #endregion properties
 
         #region methods
 
@@ -139,32 +144,34 @@ namespace SocialNetwork
 
         #endregion main
 
-        #region render
+        #region render methods
 
         private static void WriteLines(IList<(string User, string Text, uint Instant)> posts) => posts?.OrderByDescending(post => post.Instant).ToList().ForEach(post => WriteLine(post.User, post.Text, post.Instant));
 
-        private static void WriteLine(string user, string text, uint instant) => Console.WriteLine($"{user} - {text} ({ago(instant)})");
+        private static void WriteLine(string user, string text, uint instant) => Console.WriteLine($"{user} - {text} ({ComputeTimeAgo(instant)})");
 
-        private static string ago(uint instant)
+        private static string ComputeTimeAgo(uint instant)
         {
-            uint seconds = (uint)Math.Round((DateTime.UtcNow.Ticks) * 1.0 / TimeSpan.TicksPerSecond, 0) - instant;
+            // difference between now and post instant
+            uint span = (uint)Math.Round((DateTime.UtcNow.Ticks) * 1.0 / TimeSpan.TicksPerSecond, 0) - instant;
+            // word to be used: second(s), minute(s), hour(s), day(s)
             string word = null;
             foreach (var timeUnit in TimeUnits)
             {
                 word = timeUnit.Word;
-                if (timeUnit.Base.HasValue && seconds > timeUnit.Base.Value)
+                if (timeUnit.Base.HasValue && span > timeUnit.Base.Value)
                 {
-                    seconds = (uint)Math.Round((seconds) * 1.0 / timeUnit.Base.Value, 0);
+                    span = (uint)Math.Round((span) * 1.0 / timeUnit.Base.Value, 0);
                 }
                 else
                 {
                     break;
                 }
             }
-            return $"{seconds} {word ?? "second"}{(seconds > 1 ? "s" : "")} ago";
+            return $"{span} {word ?? "second"}{(span > 1 ? "s" : "")} ago";
         }
 
-        #endregion render
+        #endregion render methods
 
         #region help methods
 
@@ -198,6 +205,5 @@ kata readme: https://github.com/xpeppers/social_networking_kata
         #endregion methods
 
     }
-
 
 }

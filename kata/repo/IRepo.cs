@@ -1,7 +1,4 @@
-using System;
 using SocialNetwork.Kata.Model;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SocialNetwork.Kata.Repo
 {
